@@ -2,7 +2,6 @@
 
 async def evaluate(code: str, browser_session: BrowserSession):
     # Execute JavaScript with proper error handling and promise support
-
     cdp_session = await browser_session.get_or_create_cdp_session()
 
     try:
