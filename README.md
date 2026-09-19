@@ -13,4 +13,7 @@ async def evaluate(code: str, browser_session: BrowserSession):
             params={'expression': validated_code, 'returnByValue': True, 'awaitPromise': True},
             session_id=cdp_session.session_id,
         )
+        ...
+    except Exception as e:
+        ...
 ```
