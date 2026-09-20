@@ -1,21 +1,20 @@
 ```python
-async def download_file_from_url(
-		self, url: str, target_id: TargetID, content_type: str | None = None,
-		suggested_filename: str | None = None
-	) -> str | None:
-    if suggested_filename:
-        filename = suggested_filename
-    ...
-    final_filename = filename
-    existing_files = os.listdir(downloads_dir)
-    if filename in existing_files:
-        base, ext = os.path.splitext(filename)
-        counter = 1
-        while f'{base} ({counter}){ext}' in existing_files:
-            counter += 1
-        final_filename = f'{base} ({counter}){ext}'
-    if download_result and download_result.get('data') and len(download_result['data']) > 0:
-        download_path = os.path.join(downloads_dir, final_filename)
-        async with await anyio.open_file(download_path, 'wb') as f:
-            await f.write(bytes(download_result['data']))
+@app.post('/execute_action')
+async def execute_action(action_request: ActionRequest):
+	assert client is not None
+	try:
+		action = event_from_dict(action_request.action)
+		if not isinstance(action, Action):
+			raise HTTPException(status_code=400, detail='Invalid action type')
+		client.last_execution_time = time.time()
+		observation = await client.run_action(action)
+		return event_to_dict(observation)
+	except Exception as e:
+		logger.error(f'Error while running /execute_action: {str(e)}')
+		raise HTTPException(
+			status_code=500,
+			detail=traceback.format_exc(),
+		)
+	finally:
+		update_last_execution_time()
 ```
