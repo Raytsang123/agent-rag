@@ -1,6 +1,7 @@
 ```python
 async def download_file_from_url(
-		self, url: str, target_id: TargetID, content_type: str | None = None, suggested_filename: str | None = None
+		self, url: str, target_id: TargetID, content_type: str | None = None,
+		suggested_filename: str | None = None
 	) -> str | None:
     if suggested_filename:
         filename = suggested_filename
